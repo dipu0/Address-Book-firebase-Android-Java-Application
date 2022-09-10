@@ -305,8 +305,8 @@ public class UpdateDataActivity extends AppCompatActivity{
                                 }
                             });
                 } else {
-                    String filePathName = "profile_image/" + "" + email+timestamp;
-                    String filtPathAnsName = ID;
+                    String filePathName = "profile_image/" + "" + timestamp;
+                    String filtPathAnsName = "profile_image/" + ""+ID;
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference(filtPathAnsName);
                     storageReference.putFile(image_uri)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -430,8 +430,8 @@ public class UpdateDataActivity extends AppCompatActivity{
                                 }
                             });
                 } else {
-                    String filePathName = "profile_image/" + "" + email+timestamp;
-                    String filtPathAnsName = ID;
+                    String filePathName = "profile_image/" + "" + timestamp;
+                    String filtPathAnsName = "profile_image/" + ""+ID;
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference(filtPathAnsName);
                     storageReference.putFile(image_uri)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
