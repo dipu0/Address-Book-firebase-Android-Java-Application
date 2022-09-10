@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+        <RelativeLayout
+            android:id="@+id/toolBarRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_rect01"
+            android:padding="10dp">
+
+
+                <ImageButton
+                    android:id="@+id/editProfileBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_toStartOf="@id/logoutBtn"
+                    android:background="@null"
+                    android:src="@drawable/ic_twotone_edit" />
+
+                <ImageButton
+                    android:id="@+id/logoutBtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/editProfileBtn"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:src="@drawable/ic_baseline_login" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileIV"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="true"
+                    android:outlineAmbientShadowColor="@color/colorGreen_A400"
+                    android:outlineSpotShadowColor="@color/colorGreen_A400"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/cover1"
+                    app:civ_border_color="@color/colorAmber_A400"
+                    app:civ_border_width="3dp" />
+
+                <TextView
+                    android:id="@+id/nameTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toEndOf="@id/profileIV"
+                    android:layout_toRightOf="@id/profileIV"
+                    android:maxLines="1"
+                    android:text="Name"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/emailTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nameTV"
+                    android:layout_toEndOf="@id/profileIV"
+                    android:layout_toRightOf="@id/profileIV"
+                    android:layout_marginLeft="15dp"
+                    android:maxLines="1"
+                    android:text="Email"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/phoneTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/emailTV"
+                    android:layout_toEndOf="@id/profileIV"
+                    android:layout_toRightOf="@id/profileIV"
+                    android:layout_marginLeft="15dp"
+                    android:maxLines="1"
+                    android:text="Phone"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolBarRL">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/conatct_lstview" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/extFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Add New"
+            app:icon="@drawable/phone_book_icon"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>
