@@ -21,6 +21,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_toStartOf="@id/logoutBtn"
+                    android:layout_marginTop="5dp"
                     android:background="@null"
                     android:src="@drawable/ic_twotone_edit" />
 
@@ -31,6 +32,7 @@
                     android:layout_below="@id/editProfileBtn"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="25dp"
                     android:background="@null"
                     android:src="@drawable/ic_baseline_login" />
 
