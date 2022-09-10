@@ -149,7 +149,7 @@ public class InsertDataActivity extends AppCompatActivity {
             hashMap.put("profileImage", "");
 
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-            ref.child(timestamp).setValue(hashMap)
+            ref.child(mAuth.getUid()).child("book").child(timestamp).setValue(hashMap)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -192,7 +192,7 @@ public class InsertDataActivity extends AppCompatActivity {
                                 hashMap.put("profileImage", "" + downlodImageUri);
 
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-                                ref.child(timestamp).setValue(hashMap)
+                                ref.child(mAuth.getUid()).child("book").child(timestamp).setValue(hashMap)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

@@ -72,7 +72,7 @@ public class UpdateDataActivity extends AppCompatActivity{
 
     private ProgressDialog mProgressDialog;
     private FirebaseAuth mAuth;
-    String ID;
+    String ID,action;
 
     String timestamp;
     @Override
@@ -91,6 +91,7 @@ public class UpdateDataActivity extends AppCompatActivity{
 
         Intent i = getIntent();
         ID = i.getStringExtra("GetID");
+        action = i.getStringExtra("action");
 
         mAuth = FirebaseAuth.getInstance();
         try {
@@ -105,6 +106,16 @@ public class UpdateDataActivity extends AppCompatActivity{
         {
             editemail.setEnabled(false);
             System.out.print("NullPointerException Caught");
+        }
+
+        if (action.equals("book")){
+
+            loadAddressBookInfo();
+            updateAddressBookInfo();
+        }
+        if(action.equals("profile")){
+            loadInfo();
+            updateInfo();;
         }
 
 
@@ -140,19 +151,6 @@ public class UpdateDataActivity extends AppCompatActivity{
         mProgressDialog.setTitle("Please wait");
         mProgressDialog.setCanceledOnTouchOutside(false);
 
-
-
-        loadAddressInfo();
-
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                updateProfile();
-
-            }
-        });
-
     }
 
     private boolean isValidMail(String email) {
@@ -162,10 +160,46 @@ public class UpdateDataActivity extends AppCompatActivity{
         return android.util.Patterns.PHONE.matcher(phone).matches();
     }
 
-    private void loadAddressInfo() {
+    private void loadInfo() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-        ref.orderByChild("uid").equalTo(ID)
-                .addValueEventListener(new ValueEventListener() {
+        ref.orderByKey().equalTo(mAuth.getUid())
+        .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String address = "" + ds.child("address").getValue();
+                    String email = "" + ds.child("email").getValue();
+                    String name = "" + ds.child("name").getValue();
+                    String phn1 = "" + ds.child("phn1").getValue();
+                    String phn2 = "" + ds.child("phn2").getValue();
+                    String profileImage = "" + ds.child("profileImage").getValue();
+                    timestamp = "" + ds.child("timestamptimestamp").getValue();
+                    String uid = "" + ds.child("uid").getValue();
+
+                    editName.setText(name);
+                    editemail.setText(email);
+                    editPhn1.setText(phn1);
+                    editPhn2.setText(phn2);
+                    editaddree.setText(address);
+                    try {
+                        Picasso.get().load(profileImage).placeholder(R.drawable.cover1).into(profileImageView);
+                    } catch (Exception e) {
+                        profileImageView.setImageResource(R.drawable.cover2);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+    }
+    private void loadAddressBookInfo() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
+        ref.child(mAuth.getUid()).child("book").orderByKey().equalTo(ID)
+        .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -199,125 +233,256 @@ public class UpdateDataActivity extends AppCompatActivity{
                 });
     }
 
-    private void updateProfile() {
-        String name = editName.getText().toString();
-        String phn1 = editPhn1.getText().toString();
-        String phn2 = editPhn2.getText().toString();
-        String email = editemail.getText().toString();
-        String address = editaddree.getText().toString();
+    private void updateInfo() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        //Check input data validation
-        String error = "";
+                String name = editName.getText().toString();
+                String phn1 = editPhn1.getText().toString();
+                String phn2 = editPhn2.getText().toString();
+                String email = editemail.getText().toString();
+                String address = editaddree.getText().toString();
 
-        if(name.length()<2){
-            editName.setError("Error");
-            error = error +"\nName";
-        }
+                //Check input data validation
+                String error = "";
 
-        if(!isValidMobile(phn1) || phn1.length()<11){
-            editPhn1.setError("Error");
-            error = error +"\nPhone(Home)";
-        }
-        if(!phn2.isEmpty()){
-            if(!isValidMobile(phn2) || phn2.length()<11) {
-                editPhn2.setError("Error");
-                error = error + "\nPhone(Office)";
+                if(name.length()<2){
+                    editName.setError("Error");
+                    error = error +"\nName";
+                }
+
+                if(!isValidMobile(phn1) || phn1.length()<11){
+                    editPhn1.setError("Error");
+                    error = error +"\nPhone(Home)";
+                }
+                if(!phn2.isEmpty()){
+                    if(!isValidMobile(phn2) || phn2.length()<11) {
+                        editPhn2.setError("Error");
+                        error = error + "\nPhone(Office)";
+                    }
+                }
+                if (!isValidMail(email))
+                {
+                    editemail.setError("email");
+                    error = error +"\nEmail";
+                }
+                if(address.length()<5){
+                    editName.setError("Error");
+                    error = error +"\naddress";
+                }
+
+                if(!error.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Enter data properly", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                mProgressDialog.setMessage("Updating Profile...");
+                mProgressDialog.show();
+                if (image_uri == null) {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("name", "" + name);
+                    hashMap.put("phn1", "" + phn1);
+                    hashMap.put("phn2", "" + phn2);
+                    hashMap.put("address", "" + address);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
+                    ref.child(mAuth.getUid()).updateChildren(hashMap)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
+                                    startActivity(i);
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    String filePathName = "profile_image/" + "" + email+timestamp;
+                    String filtPathAnsName = ID;
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReference(filtPathAnsName);
+                    storageReference.putFile(image_uri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                    while (!uriTask.isSuccessful()) ;
+                                    Uri downlodImageUri = uriTask.getResult();
+
+                                    if (uriTask.isSuccessful()) {
+                                        HashMap<String, Object> hashMap = new HashMap<>();
+                                        hashMap.put("name", "" + name);
+                                        hashMap.put("phn1", "" + phn1);
+                                        hashMap.put("phn2", "" + phn2);
+                                        hashMap.put("address", "" + address);
+                                        hashMap.put("profileImage", "" + downlodImageUri);
+
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
+                                        ref.child(mAuth.getUid()).updateChildren(hashMap)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
+                                                        startActivity(i);
+                                                        mProgressDialog.dismiss();
+                                                        Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        mProgressDialog.dismiss();
+                                                        Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
             }
-        }
-        if (!isValidMail(email))
-        {
-            editemail.setError("email");
-            error = error +"\nEmail";
-        }
-        if(address.length()<5){
-            editName.setError("Error");
-            error = error +"\naddress";
-        }
+        });
 
-        if(!error.isEmpty()){
-            Toast.makeText(this, "Enter data properly", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        mProgressDialog.setMessage("Updating Profile...");
-        mProgressDialog.show();
-        if (image_uri == null) {
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("name", "" + name);
-            hashMap.put("phn1", "" + phn1);
-            hashMap.put("phn2", "" + phn2);
-            hashMap.put("address", "" + address);
-
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-            ref.child(ID).updateChildren(hashMap)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
-                            startActivity(i);
-                            mProgressDialog.dismiss();
-                            Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            mProgressDialog.dismiss();
-                            Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            String filePathName = "profile_image/" + "" + email+timestamp;
-            String filtPathAnsName = ID;
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference(filtPathAnsName);
-            storageReference.putFile(image_uri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                            while (!uriTask.isSuccessful()) ;
-                            Uri downlodImageUri = uriTask.getResult();
-
-                            if (uriTask.isSuccessful()) {
-                                HashMap<String, Object> hashMap = new HashMap<>();
-                                hashMap.put("name", "" + name);
-                                hashMap.put("phn1", "" + phn1);
-                                hashMap.put("phn2", "" + phn2);
-                                hashMap.put("address", "" + address);
-                                hashMap.put("profileImage", "" + downlodImageUri);
-
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-                                ref.child(mAuth.getUid()).updateChildren(hashMap)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
-                                                startActivity(i);
-                                                mProgressDialog.dismiss();
-                                                Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                mProgressDialog.dismiss();
-                                                Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            mProgressDialog.dismiss();
-                            Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
     }
+    private void updateAddressBookInfo() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                String name = editName.getText().toString();
+                String phn1 = editPhn1.getText().toString();
+                String phn2 = editPhn2.getText().toString();
+                String email = editemail.getText().toString();
+                String address = editaddree.getText().toString();
+
+                //Check input data validation
+                String error = "";
+
+                if(name.length()<2){
+                    editName.setError("Error");
+                    error = error +"\nName";
+                }
+
+                if(!isValidMobile(phn1) || phn1.length()<11){
+                    editPhn1.setError("Error");
+                    error = error +"\nPhone(Home)";
+                }
+                if(!phn2.isEmpty()){
+                    if(!isValidMobile(phn2) || phn2.length()<11) {
+                        editPhn2.setError("Error");
+                        error = error + "\nPhone(Office)";
+                    }
+                }
+                if (!isValidMail(email))
+                {
+                    editemail.setError("email");
+                    error = error +"\nEmail";
+                }
+                if(address.length()<5){
+                    editName.setError("Error");
+                    error = error +"\naddress";
+                }
+
+                if(!error.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Enter data properly", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                mProgressDialog.setMessage("Updating Profile...");
+                mProgressDialog.show();
+                if (image_uri == null) {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("name", "" + name);
+                    hashMap.put("phn1", "" + phn1);
+                    hashMap.put("phn2", "" + phn2);
+                    hashMap.put("address", "" + address);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
+                    ref.child(mAuth.getUid()).child("book").child(ID)
+                    .updateChildren(hashMap)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
+                                    startActivity(i);
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    String filePathName = "profile_image/" + "" + email+timestamp;
+                    String filtPathAnsName = ID;
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReference(filtPathAnsName);
+                    storageReference.putFile(image_uri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                    while (!uriTask.isSuccessful()) ;
+                                    Uri downlodImageUri = uriTask.getResult();
+
+                                    if (uriTask.isSuccessful()) {
+                                        HashMap<String, Object> hashMap = new HashMap<>();
+                                        hashMap.put("name", "" + name);
+                                        hashMap.put("phn1", "" + phn1);
+                                        hashMap.put("phn2", "" + phn2);
+                                        hashMap.put("address", "" + address);
+                                        hashMap.put("profileImage", "" + downlodImageUri);
+
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
+                                        ref.child(mAuth.getUid()).child("book").child(ID)
+                                                .updateChildren(hashMap)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
+                                                        startActivity(i);
+                                                        mProgressDialog.dismiss();
+                                                        Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        mProgressDialog.dismiss();
+                                                        Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+        });
+
+    }
     public void ImageOnClick(View v) {
         String[] options = {"Camera", "Gallery", "remove"};
 

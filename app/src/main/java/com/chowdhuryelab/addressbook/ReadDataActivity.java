@@ -36,7 +36,7 @@ public class ReadDataActivity extends AppCompatActivity {
     LinearLayout llphn2;
     String ID;
 
-
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +53,17 @@ public class ReadDataActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.profileImageView);
 
         llphn2 = findViewById(R.id.llphn2);
+        mAuth = FirebaseAuth.getInstance();
 
         Intent i = getIntent();
         ID = i.getStringExtra("GetID");
 
+        loadAddressInfo();
+
         btn_update.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(ReadDataActivity.this, UpdateDataActivity.class);
+                intent.putExtra("action","book");
                 intent.putExtra("GetID",ID);
                 startActivity(intent);
             }
@@ -83,7 +87,8 @@ public class ReadDataActivity extends AppCompatActivity {
 
                                             FirebaseAuth mAuth = FirebaseAuth.getInstance();
                                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-                                            ref.child(ID).removeValue()
+                                            ref.child(mAuth.getUid()).child("book").child(ID)
+                                                    .removeValue()
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
@@ -113,14 +118,13 @@ public class ReadDataActivity extends AppCompatActivity {
             }
         });
 
-        loadAddressInfo();
-
     }
 
     private void loadAddressInfo() {
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-        ref.orderByChild("uid").equalTo(ID)
-                .addValueEventListener(new ValueEventListener() {
+        ref.child(mAuth.getUid()).child("book").orderByKey().equalTo(ID)
+        .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -133,6 +137,7 @@ public class ReadDataActivity extends AppCompatActivity {
                             String timestamp = "" + ds.child("timestamptimestamp").getValue();
                             String uid = "" + ds.child("uid").getValue();
 
+                            System.out.println("ggggggggggggggg"+name);
                             if(phn2.isEmpty())
                                 llphn2.setVisibility(View.GONE);
                             else textView_Phn2.setText(phn2);

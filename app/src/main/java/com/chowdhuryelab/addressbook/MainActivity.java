@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, UpdateDataActivity.class);
                 i.putExtra("GetID",mAuth.getUid());
+                i.putExtra("action","profile");
                 startActivity(i);
             }
         });
@@ -151,9 +152,10 @@ public class MainActivity extends AppCompatActivity {
     }
 private void loadAddress(){
 
-           mAddressesList = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
-                ref.addValueEventListener(new ValueEventListener() {
+            mAddressesList = new ArrayList<>();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("addressbook");
+            ref.child(mAuth.getUid()).child("book")
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         mAddressesList.clear();

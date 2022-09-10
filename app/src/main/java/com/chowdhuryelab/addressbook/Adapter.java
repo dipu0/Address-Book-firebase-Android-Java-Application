@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private Context mContext;
     private Cursor mCursor;
     private ArrayList mAddressList;
+    private FirebaseAuth mAuth;
 
 //    public Adapter(Context context, Cursor cursor) {
 //        mContext = context;
@@ -48,6 +50,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
             btnCall = itemView.findViewById(R.id.btnCall);
             btnSMS = itemView.findViewById(R.id.btnSMS);
+
+            mAuth = FirebaseAuth.getInstance();
 
             itemView.setOnClickListener(this);
         }
