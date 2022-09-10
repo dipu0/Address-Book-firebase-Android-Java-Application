@@ -1,23 +1,16 @@
 package com.chowdhuryelab.addressbook;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,13 +39,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
-import java.util.Objects;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class update_data extends AppCompatActivity{
+public class UpdateDataActivity extends AppCompatActivity{
     DatabaseHelper myDb;
     EditText editName, editPhn1, editPhn2, editemail, editaddree ;
     Button pickImage, btnUpdate;
@@ -265,17 +254,17 @@ public class update_data extends AppCompatActivity{
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Intent i = new Intent(update_data.this,MainActivity.class);
+                            Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
                             startActivity(i);
                             mProgressDialog.dismiss();
-                            Toast.makeText(update_data.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             mProgressDialog.dismiss();
-                            Toast.makeText(update_data.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
@@ -303,17 +292,17 @@ public class update_data extends AppCompatActivity{
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Intent i = new Intent(update_data.this,MainActivity.class);
+                                                Intent i = new Intent(UpdateDataActivity.this,MainActivity.class);
                                                 startActivity(i);
                                                 mProgressDialog.dismiss();
-                                                Toast.makeText(update_data.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(UpdateDataActivity.this, "Updating Profile...", Toast.LENGTH_SHORT).show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 mProgressDialog.dismiss();
-                                                Toast.makeText(update_data.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }
@@ -323,7 +312,7 @@ public class update_data extends AppCompatActivity{
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             mProgressDialog.dismiss();
-                            Toast.makeText(update_data.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -450,20 +439,20 @@ public class update_data extends AppCompatActivity{
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("@update_data.onResume");
+        System.out.println("@UpdateDataActivity.onResume");
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        System.out.println("@update_data.onPause");
+        System.out.println("@UpdateDataActivity.onPause");
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
-        System.out.println("@update_data.onRestart");
+        System.out.println("@UpdateDataActivity.onRestart");
 
     }
 

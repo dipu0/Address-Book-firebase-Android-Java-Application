@@ -41,9 +41,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String name, String phn1, String phn2, String email, String address, byte[] img) {
+    public boolean insertData(String id, String name, String phn1, String phn2, String email, String address, byte[] img) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_1, id);
         contentValues.put(COL_2, name);
         contentValues.put(COL_3, phn1);
         contentValues.put(COL_4, phn2);

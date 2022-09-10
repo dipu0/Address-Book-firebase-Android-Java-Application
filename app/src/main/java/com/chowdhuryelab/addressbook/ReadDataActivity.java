@@ -3,9 +3,7 @@ package com.chowdhuryelab.addressbook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -28,10 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
-
-public class read_data extends AppCompatActivity {
+public class ReadDataActivity extends AppCompatActivity {
     Button btn_update, btn_delete;
     DatabaseHelper myDb;
     TextView textView_Name, textView_Address, textView_Email, textView_Phn1,textView_Phn2;
@@ -63,7 +59,7 @@ public class read_data extends AppCompatActivity {
 
         btn_update.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(read_data.this, update_data.class);
+                Intent intent = new Intent(ReadDataActivity.this, UpdateDataActivity.class);
                 intent.putExtra("GetID",ID);
                 startActivity(intent);
             }
@@ -77,7 +73,7 @@ public class read_data extends AppCompatActivity {
                     public void run() {
 
                         if (!isFinishing()) {
-                            new AlertDialog.Builder(read_data.this)
+                            new AlertDialog.Builder(ReadDataActivity.this)
                                     .setTitle("Delete")
                                     .setMessage("Do you want to delete the record")
                                     .setCancelable(true)
@@ -196,7 +192,7 @@ public class read_data extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         loadAddressInfo();
-        System.out.println("@read_data.onResume");
+        System.out.println("@ReadDataActivity.onResume");
 
     }
 
@@ -204,14 +200,14 @@ public class read_data extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         loadAddressInfo();
-        System.out.println("@read_data.onPause");
+        System.out.println("@ReadDataActivity.onPause");
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
         loadAddressInfo();
-        System.out.println("@read_data.onRestart");
+        System.out.println("@ReadDataActivity.onRestart");
 
     }
 

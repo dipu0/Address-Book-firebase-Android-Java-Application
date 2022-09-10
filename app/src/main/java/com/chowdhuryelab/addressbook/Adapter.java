@@ -57,7 +57,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
             if(view == itemView)
             {
-                Intent i = new Intent(mContext, read_data.class);
+                Intent i = new Intent(mContext, ReadDataActivity.class);
                 i.putExtra("GetID", String.valueOf(view.getTag()));
                 mContext.startActivity(i);
                 //((MainActivity)mContext).finish();
@@ -116,7 +116,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 public void onClick(View v) {
                     //on click item
 
-                    Intent i = new Intent(mContext, read_data.class);
+                    Intent i = new Intent(mContext, ReadDataActivity.class);
                     i.putExtra("GetID",uid);
                     mContext.startActivity(i);
 

@@ -1,32 +1,21 @@
 package com.chowdhuryelab.addressbook;
 
-import static com.chowdhuryelab.addressbook.update_data.CAMERA_CODE;
-
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,7 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 
-public class insert_data extends AppCompatActivity {
+public class InsertDataActivity extends AppCompatActivity {
     DatabaseHelper myDb;
     EditText editName, editPhn1, editPhn2, editemail, editaddree;
     Button pickImage, btnAddData;
@@ -65,7 +54,9 @@ public class insert_data extends AppCompatActivity {
     private String[] cameraPermission;
     private String[] storagePermission;
     //Check input data validation
-    String error = "";
+    private String error = "";
+    private String timestamp;
+
     final int bmpHeight = 160;
     final int bmpWidth = 160;
 
@@ -145,7 +136,7 @@ public class insert_data extends AppCompatActivity {
         mProgressDialog.setMessage("Saving Account Details..");
         mProgressDialog.show();
 
-        final String timestamp = "" + System.currentTimeMillis();
+        timestamp = "" + System.currentTimeMillis();
         if (image_uri == null) {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("uid", "" + timestamp);
@@ -164,7 +155,7 @@ public class insert_data extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
 
                             mProgressDialog.dismiss();
-                            startActivity(new Intent(insert_data.this, MainActivity.class));
+                            startActivity(new Intent(InsertDataActivity.this, MainActivity.class));
                             finish();
                         }
                     })
@@ -206,7 +197,8 @@ public class insert_data extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 mProgressDialog.dismiss();
-                                                startActivity(new Intent(insert_data.this, MainActivity.class));
+                                                startActivity(new Intent(InsertDataActivity.this, MainActivity.class));
+                                                AddData();
                                                 Toast toast = Toast.makeText(getApplicationContext(), "Data Created", Toast.LENGTH_SHORT);
                                                 finish();
                                             }
@@ -227,7 +219,7 @@ public class insert_data extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             mProgressDialog.dismiss();
-                            Toast.makeText(insert_data.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InsertDataActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -278,11 +270,11 @@ public class insert_data extends AppCompatActivity {
         if(error.isEmpty()){
             // Insert Data in sqlite using db helper
             //data =image
-            boolean isInserted = myDb.insertData(name, phn1, phn2, email, address, data);
+            boolean isInserted = myDb.insertData(timestamp, name, phn1, phn2, email, address, data);
             if (isInserted == true) {
-                Toast.makeText(insert_data.this, "Data Inserted", Toast.LENGTH_LONG).show();
+                Toast.makeText(InsertDataActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
                 finish();
-//                                Intent intent = new Intent(insert_data.this, MainActivity.class);
+//                                Intent intent = new Intent(InsertDataActivity.this, MainActivity.class);
 //                                startActivity(intent);
                 editName.setText("");
                 editaddree.setText("");
@@ -291,9 +283,9 @@ public class insert_data extends AppCompatActivity {
                 editemail.setText("");
 
             } else
-                Toast.makeText(insert_data.this, "Data not Inserted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(InsertDataActivity.this, "Data not Inserted", Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(insert_data.this, "Please check invalid fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(InsertDataActivity.this, "Please check invalid fields", Toast.LENGTH_SHORT).show();
         }
 
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorwhite"
-    tools:context=".insert_data">
+    tools:context=".InsertDataActivity">
 
     <ScrollView
         android:layout_width="match_parent"

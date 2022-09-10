@@ -2,7 +2,6 @@ package com.chowdhuryelab.addressbook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         editProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, update_data.class);
+                Intent i = new Intent(MainActivity.this, UpdateDataActivity.class);
                 i.putExtra("GetID",mAuth.getUid());
                 startActivity(i);
             }
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         extendedFAB.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent myintent= new Intent(MainActivity.this, insert_data.class);
+                Intent myintent= new Intent(MainActivity.this, InsertDataActivity.class);
                // finish();
                 startActivity(myintent);
             }

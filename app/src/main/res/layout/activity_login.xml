@@ -18,9 +18,11 @@
             android:id="@+id/iconText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+           android:layout_centerInParent="true"
             android:text="Welcome Back"
-            android:textSize="30sp" />
+            android:textSize="45sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
 
     </RelativeLayout>
 
@@ -104,7 +106,7 @@
 
             <CheckBox
                 android:id="@+id/remember"
-                android:buttonTint="@color/black"
+                android:buttonTint="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="48dp"
@@ -140,7 +142,8 @@
                     android:backgroundTint="@color/white"
                     android:minWidth="150dp"
                     android:text="Login"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
 
         </LinearLayout>
 

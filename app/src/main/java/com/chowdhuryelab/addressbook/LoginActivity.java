@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -51,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_login2);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
         mProgressDialog = new ProgressDialog(this);

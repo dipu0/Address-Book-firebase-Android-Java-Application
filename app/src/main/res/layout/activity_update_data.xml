@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorwhite"
-    tools:context=".update_data">
+    tools:context=".UpdateDataActivity">
 
 
     <ScrollView
