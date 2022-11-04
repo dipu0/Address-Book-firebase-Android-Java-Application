@@ -1,7 +1,7 @@
 
 ## Address-Book
 
-A single page android java application that uses SQLite to store data and image of user. CRUD(Create, Read, Update and Delete) implementation of sqlite
+A single page android java application that uses Firebase to store data and image of user. CRUD(Create, Read, Update and Delete) implementation of Firebase.
 
 
 ## Features
